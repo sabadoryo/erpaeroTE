@@ -7,7 +7,6 @@ import {
 import AuthService from "../services/AuthService";
 import customResponse from "../customResponse";
 import LoginRequest from "../requests/AuthRequests/LoginRequest";
-import authenticateToken from "../middlewares/authenticateToken";
 
 
 const authRouter = express.Router();
