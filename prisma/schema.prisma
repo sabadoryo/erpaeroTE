@@ -22,6 +22,7 @@ model Task {
   title String 
   description String?
   status Status @default(toDo)
+  created_at DateTime @default(now())
 
   tags Tag[]
 }
