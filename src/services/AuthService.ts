@@ -64,9 +64,8 @@ export default class AuthService {
         }
     }
 
-    async blackListTokens(accessToken: string, refreshToken: string) {
-        await this.authRepository.blacklistToken(accessToken);
-        await this.authRepository.blacklistToken(refreshToken);
+    async blackListTokens(token: string) {
+        await this.authRepository.blacklistToken(token);
 
         return true;
     }

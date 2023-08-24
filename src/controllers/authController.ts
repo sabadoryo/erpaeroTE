@@ -60,7 +60,9 @@ authRouter.post("/signin", validateRequestMiddleware(LoginRequest), (req, res) =
 
 authRouter.post("/signin/new_token", authenticateToken, validateRequestMiddleware(RefreshTokenRequest), async (req: any, res) => {
 
-    await authService.blackListTokens(req.headers['authorization'], req.body.refresh_token);
+    await authService.blackListTokens(req.headers['authorization']);
+    await authService.blackListTokens(req.body.refresh_token);
+
     const accessToken = authService.generateAccessToken(req.auth.user.username);
     const refreshToken = authService.generateRefreshToken(req.auth.user.username);
 
@@ -77,5 +79,19 @@ authRouter.post("/signin/new_token", authenticateToken, validateRequestMiddlewar
             )
         )    
 })
+
+authRouter.post("/logout", authenticateToken, async(req: any, res: any) => {
+    await authService.blackListTokens(req.headers['authorization']);
+
+    res.status(StatusCodes.OK)
+        .send(
+            customResponse(
+                StatusCodes.OK,
+                "Success.",
+                [],
+                null
+            )
+        )
+});
 
 export default authRouter;

@@ -23,7 +23,7 @@ export default async function authenticateToken(req: Request & any, res: Respons
         const user = await userRepository.getUserByUsername(decoded.username);
         const blackListedTokens = (await authRepository.getBlackListedTokens()).map(blt => blt.token);
 
-        if (!user && blackListedTokens.includes(token)) {
+        if (!user || blackListedTokens.includes(req.headers['authorization'])) {
             res.status(StatusCodes.UNAUTHORIZED)
                 .send(customResponse(StatusCodes.UNAUTHORIZED, "Unauthorized", [], null))        
         } else {
