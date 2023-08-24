@@ -3,8 +3,10 @@ import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import customResponse from "../customResponse";
 import UserRepository from "../repos/UserRepository";
+import AuthRepository from "../repos/AuthRepository";
 
 const userRepository = new UserRepository();
+const authRepository = new AuthRepository();
 
 interface JwtPayload {
     username: string;
@@ -19,8 +21,9 @@ export default async function authenticateToken(req: Request & any, res: Respons
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET || "") as JwtPayload;
         const user = await userRepository.getUserByUsername(decoded.username);
+        const blackListedTokens = (await authRepository.getBlackListedTokens()).map(blt => blt.token);
 
-        if (!user) {
+        if (!user && blackListedTokens.includes(token)) {
             res.status(StatusCodes.UNAUTHORIZED)
                 .send(customResponse(StatusCodes.UNAUTHORIZED, "Unauthorized", [], null))        
         } else {

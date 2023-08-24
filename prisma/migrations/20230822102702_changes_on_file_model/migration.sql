@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE `file` MODIFY `extension` VARCHAR(191) NULL,
+    MODIFY `mime_type` VARCHAR(191) NULL,
+    MODIFY `size` DOUBLE NULL,
+    MODIFY `uploaded_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3);

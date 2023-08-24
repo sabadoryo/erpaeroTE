@@ -6,38 +6,31 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 
 model User {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id Int @id @default(autoincrement())
   username String @unique
   password String
+  files File[]
 }
 
-model Task {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  title String 
-  description String?
-  status Status @default(toDo)
-  created_at DateTime @default(now())
-
-  tags Tag[]
+model BlackListedToken {
+  id Int @id @default(autoincrement())
+  token String
 }
 
-model Tag {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+model File {
+  id Int @id @default(autoincrement())
   name String
-  created_at DateTime @default(now())
-
-  task_id String @db.ObjectId
-  task Task @relation(fields: [task_id], references: [id])
-}
-
-enum Status {
-  toDo
-  inPrgoress
-  done
+  extension String?
+  mime_type String?
+  size Float?
+  user User @relation(fields: [user_id], references: [id])
+  user_id Int
+  path String
+  uploaded_at DateTime @default(now())
 }
